@@ -12,6 +12,7 @@ import { CatListComponent } from './components/cat-list/cat-list.component';
 import { CatDetailComponent } from './components/cat-detail/cat-detail.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { MealListComponent } from './components/meal-list/meal-list.component';
+import { MealCreateComponent } from './components/meal-create/meal-create.component';
 import { StockComponent } from './components/stock/stock.component';
 import { ApiDocComponent } from './components/api-doc/api-doc.component';
 
@@ -30,6 +31,7 @@ import { routes } from './app.routes';
     CatDetailComponent,
     UserListComponent,
     MealListComponent,
+    MealCreateComponent,
     StockComponent,
     ApiDocComponent
   ],

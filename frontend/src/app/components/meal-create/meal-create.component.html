@@ -1,0 +1,128 @@
+<app-header></app-header>
+
+<div class="meal-create-container">
+  <div class="page-header">
+    <h1>Nouveau repas avancé</h1>
+    <p>Créez un ou plusieurs repas manuellement</p>
+  </div>
+
+  <div *ngIf="isLoading && !cats.length && !users.length" class="text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div *ngIf="success" class="alert alert-success">
+    {{ success }}
+  </div>
+
+  <form (ngSubmit)="createMeals()" class="meal-form">
+    <!-- Cats Selection (Checkboxes) -->
+    <div class="form-section">
+      <h3>Sélectionnez les chats</h3>
+      <div *ngIf="activeCats.length === 0" class="alert alert-warning">
+        Aucun chat actif disponible. Veuillez créer un chat d'abord.
+      </div>
+      <div class="cats-checkboxes" *ngIf="activeCats.length > 0">
+        <div class="form-check" *ngFor="let cat of activeCats">
+          <input 
+            class="form-check-input" 
+            type="checkbox" 
+            [id]="'cat_' + cat.id" 
+            [checked]="isCatSelected(cat.id)"
+            (change)="onCatSelected(cat.id, $event)"
+            [disabled]="isLoading"
+          />
+          <label class="form-check-label" [for]="'cat_' + cat.id">
+            {{ cat.name }}
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Selection -->
+    <div class="form-section">
+      <h3>Sélectionnez l'humain</h3>
+      <div class="form-group">
+        <label for="userSelect">Utilisateur</label>
+        <select 
+          id="userSelect" 
+          class="form-control" 
+          [(ngModel)]="selectedUserId" 
+          name="userSelect"
+          [disabled]="isLoading"
+        >
+          <option [value]="null">-- Sélectionnez un utilisateur --</option>
+          <option *ngFor="let user of users" [value]="user.id">
+            {{ user.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Date/Time Selection -->
+    <div class="form-section">
+      <h3>Date et heure du repas</h3>
+      <div class="form-group">
+        <label for="dateTime">Date et heure</label>
+        <input 
+          type="datetime-local" 
+          id="dateTime" 
+          class="form-control" 
+          [(ngModel)]="selectedDateTime" 
+          name="dateTime"
+          [disabled]="isLoading"
+        />
+      </div>
+    </div>
+
+    <!-- Sachets Used -->
+    <div class="form-section">
+      <h3>Nombre de sachets</h3>
+      <div class="form-group">
+        <label for="sachetsUsed">Sachets utilisés (par chat)</label>
+        <input 
+          type="number" 
+          id="sachetsUsed" 
+          class="form-control" 
+          [(ngModel)]="sachetsUsed" 
+          name="sachetsUsed"
+          min="1"
+          [disabled]="isLoading"
+        />
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="form-actions">
+      <button 
+        type="submit" 
+        class="btn btn-primary btn-lg" 
+        [disabled]="isLoading || selectedCatIds.length === 0 || !selectedUserId"
+      >
+        <span *ngIf="!isLoading">Créer les repas</span>
+        <span *ngIf="isLoading">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Création en cours...
+        </span>
+      </button>
+      <a href="/meals" class="btn btn-secondary btn-lg" [disabled]="isLoading">
+        Annuler
+      </a>
+    </div>
+
+    <!-- Summary -->
+    <div class="summary" *ngIf="selectedCatIds.length > 0">
+      <p>
+        <strong>Résumé :</strong> 
+        {{ selectedCatIds.length }} chat(s) sélectionné(s), 
+        {{ sachetsUsed }} sachet(s) par chat, 
+        Total : {{ selectedCatIds.length * sachetsUsed }} sachets
+      </p>
+    </div>
+  </form>
+</div>
