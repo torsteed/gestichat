@@ -25,6 +25,23 @@ export class StockComponent implements OnInit {
     note: ''
   };
 
+  // Form fields for removing stock
+  removeStockForm = {
+    sachets_removed: 0,
+    user_id: 0,
+    note: ''
+  };
+
+  // Form fields for setting stock
+  setStockForm = {
+    new_value: 0,
+    user_id: 0,
+    note: ''
+  };
+
+  showRemoveForm = false;
+  showSetForm = false;
+
   constructor(
     private apiService: ApiService,
     private userService: UserService
@@ -36,6 +53,8 @@ export class StockComponent implements OnInit {
     
     if (this.selectedUser) {
       this.newStock.user_id = this.selectedUser.id;
+      this.removeStockForm.user_id = this.selectedUser.id;
+      this.setStockForm.user_id = this.selectedUser.id;
     }
   }
 
@@ -97,12 +116,108 @@ export class StockComponent implements OnInit {
     });
   }
 
+  removeStock(): void {
+    if (!this.removeStockForm.sachets_removed || this.removeStockForm.sachets_removed <= 0) {
+      this.error = 'La quantité doit être supérieure à 0';
+      return;
+    }
+    
+    if (!this.removeStockForm.user_id) {
+      this.error = 'Veuillez sélectionner un utilisateur';
+      return;
+    }
+
+    this.isLoading = true;
+    this.error = null;
+    
+    this.apiService.removeStock(
+      this.removeStockForm.sachets_removed,
+      this.removeStockForm.user_id,
+      this.removeStockForm.note
+    ).subscribe({
+      next: () => {
+        this.resetRemoveForm();
+        this.loadData();
+      },
+      error: (err) => {
+        this.error = 'Impossible de retirer du stock';
+        this.isLoading = false;
+        console.error('Error removing stock:', err);
+      }
+    });
+  }
+
+  setStock(): void {
+    if (this.setStockForm.new_value === undefined) {
+      this.error = 'Veuillez définir une valeur valide';
+      return;
+    }
+    
+    if (!this.setStockForm.user_id) {
+      this.error = 'Veuillez sélectionner un utilisateur';
+      return;
+    }
+
+    this.isLoading = true;
+    this.error = null;
+    
+    this.apiService.setStock(
+      this.setStockForm.new_value,
+      this.setStockForm.user_id,
+      this.setStockForm.note
+    ).subscribe({
+      next: () => {
+        this.resetSetForm();
+        this.loadData();
+      },
+      error: (err) => {
+        this.error = 'Impossible de définir le stock';
+        this.isLoading = false;
+        console.error('Error setting stock:', err);
+      }
+    });
+  }
+
+  toggleRemoveForm(): void {
+    this.showRemoveForm = !this.showRemoveForm;
+    if (this.showRemoveForm) {
+      this.showSetForm = false;
+      this.resetRemoveForm();
+    }
+  }
+
+  toggleSetForm(): void {
+    this.showSetForm = !this.showSetForm;
+    if (this.showSetForm) {
+      this.showRemoveForm = false;
+      this.resetSetForm();
+    }
+  }
+
   resetForm(): void {
     this.newStock = {
       sachets_added: 0,
       user_id: this.selectedUser?.id || 0,
       note: ''
     };
+  }
+
+  resetRemoveForm(): void {
+    this.removeStockForm = {
+      sachets_removed: 0,
+      user_id: this.selectedUser?.id || 0,
+      note: ''
+    };
+    this.showRemoveForm = false;
+  }
+
+  resetSetForm(): void {
+    this.setStockForm = {
+      new_value: this.currentStock?.currentStock || 0,
+      user_id: this.selectedUser?.id || 0,
+      note: ''
+    };
+    this.showSetForm = false;
   }
 
   getUserName(userId: number): string {

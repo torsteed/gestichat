@@ -83,6 +83,23 @@
           color: #333;
         }
       }
+      
+      .stock-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+        
+        .btn {
+          padding: 10px 20px;
+          font-size: 14px;
+          border-radius: 4px;
+          
+          i {
+            margin-right: 8px;
+          }
+        }
+      }
     }
   }
   

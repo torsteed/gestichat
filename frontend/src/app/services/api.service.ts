@@ -151,4 +151,16 @@ export class ApiService {
       catchError(this.handleError)
     );
   }
+
+  removeStock(sachets_removed: number, user_id: number, note?: string): Observable<Stock> {
+    return this.http.post<Stock>(`${this.apiUrl}/stock/remove`, { sachets_removed, user_id, note }, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  setStock(new_value: number, user_id: number, note?: string): Observable<{ message: string; oldValue: number; newValue: number; adjustment: number }> {
+    return this.http.post<{ message: string; oldValue: number; newValue: number; adjustment: number }>(`${this.apiUrl}/stock/set`, { new_value, user_id, note }, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
 }

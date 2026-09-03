@@ -43,6 +43,15 @@
         Le stock est calculé automatiquement :<br>
         <strong>Total ajouté</strong> - <strong>Total consommé</strong> = <strong>Stock actuel</strong>
       </p>
+      
+      <div class="stock-actions">
+        <button class="btn btn-danger" (click)="toggleRemoveForm()">
+          <i class="fas fa-minus"></i> Retirer des sachets
+        </button>
+        <button class="btn btn-warning" (click)="toggleSetForm()">
+          <i class="fas fa-edit"></i> Définir une valeur
+        </button>
+      </div>
     </div>
   </div>
 
@@ -87,6 +96,72 @@
       </button>
       <button class="btn btn-outline-secondary" (click)="resetForm()" [disabled]="isLoading">
         <i class="fas fa-times"></i> Réinitialiser
+      </button>
+    </div>
+  </div>
+
+  <!-- Remove Stock Form -->
+  <div class="form-container" *ngIf="showRemoveForm">
+    <h3>Retirer des sachets du stock</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="removeStockQuantity">Quantité de sachets *</label>
+        <input type="number" id="removeStockQuantity" [(ngModel)]="removeStockForm.sachets_removed" min="1" max="1000" placeholder="Nombre de sachets à retirer" />
+      </div>
+      
+      <div class="form-group">
+        <label for="removeStockUser">Utilisateur *</label>
+        <select id="removeStockUser" [(ngModel)]="removeStockForm.user_id">
+          <option value="0">Sélectionnez un utilisateur</option>
+          <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="removeStockNote">Note (optionnelle)</label>
+        <input type="text" id="removeStockNote" [(ngModel)]="removeStockForm.note" placeholder="Ex: Retrait pour ajustement" />
+      </div>
+    </div>
+    
+    <div class="form-actions">
+      <button class="btn btn-danger" (click)="removeStock()" [disabled]="isLoading || !removeStockForm.sachets_removed || removeStockForm.sachets_removed <= 0 || !removeStockForm.user_id">
+        <i class="fas fa-minus"></i> Retirer du stock
+      </button>
+      <button class="btn btn-outline-secondary" (click)="resetRemoveForm()" [disabled]="isLoading">
+        <i class="fas fa-times"></i> Annuler
+      </button>
+    </div>
+  </div>
+
+  <!-- Set Stock Form -->
+  <div class="form-container" *ngIf="showSetForm">
+    <h3>Définir une valeur de stock</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="setStockValue">Nouvelle valeur *</label>
+        <input type="number" id="setStockValue" [(ngModel)]="setStockForm.new_value" placeholder="Nouvelle valeur du stock" />
+      </div>
+      
+      <div class="form-group">
+        <label for="setStockUser">Utilisateur *</label>
+        <select id="setStockUser" [(ngModel)]="setStockForm.user_id">
+          <option value="0">Sélectionnez un utilisateur</option>
+          <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="setStockNote">Note (optionnelle)</label>
+        <input type="text" id="setStockNote" [(ngModel)]="setStockForm.note" placeholder="Ex: Correction d'inventaire" />
+      </div>
+    </div>
+    
+    <div class="form-actions">
+      <button class="btn btn-warning" (click)="setStock()" [disabled]="isLoading || setStockForm.new_value === undefined || !setStockForm.user_id">
+        <i class="fas fa-edit"></i> Définir le stock
+      </button>
+      <button class="btn btn-outline-secondary" (click)="resetSetForm()" [disabled]="isLoading">
+        <i class="fas fa-times"></i> Annuler
       </button>
     </div>
   </div>

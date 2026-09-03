@@ -358,6 +358,58 @@ app.post('/api/stock', async (req, res) => {
   }
 });
 
+app.post('/api/stock/remove', async (req, res) => {
+  try {
+    const { sachets_removed, user_id, note } = req.body;
+    if (!sachets_removed || sachets_removed <= 0 || !user_id) {
+      return res.status(400).json({ error: 'sachets_removed (positive) and user_id are required' });
+    }
+    const stock = await Stock.create({ 
+      sachets_added: -sachets_removed, 
+      user_id, 
+      note: note || `Retrait manuel: -${sachets_removed} sachets`, 
+      added_at: new Date() 
+    });
+    res.status(201).json(stock);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/stock/set', async (req, res) => {
+  try {
+    const { new_value, user_id, note } = req.body;
+    if (new_value === undefined || !user_id) {
+      return res.status(400).json({ error: 'new_value and user_id are required' });
+    }
+    
+    const stockAdded = await Stock.sum('sachets_added');
+    const stockUsed = await Meal.sum('sachets_used');
+    const currentStock = (stockAdded || 0) - (stockUsed || 0);
+    
+    const difference = new_value - currentStock;
+    
+    if (difference !== 0) {
+      const adjustmentNote = note || `Ajustement manuel: ${currentStock} -> ${new_value}`;
+      await Stock.create({ 
+        sachets_added: difference, 
+        user_id, 
+        note: adjustmentNote, 
+        added_at: new Date() 
+      });
+    }
+    
+    res.json({ 
+      message: 'Stock value set successfully',
+      oldValue: currentStock,
+      newValue: new_value,
+      adjustment: difference
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Dashboard endpoints
 app.get('/api/dashboard/latest-meals-by-cat', async (req, res) => {
   try {
