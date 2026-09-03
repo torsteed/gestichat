@@ -21,7 +21,7 @@ export class UserListComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private userService: UserService
+    public userService: UserService
   ) { }
 
   ngOnInit(): void {
@@ -114,6 +114,11 @@ export class UserListComponent implements OnInit {
   selectUser(user: User): void {
     this.userService.setSelectedUser(user);
     this.selectedUser = user;
+  }
+
+  clearSelectedUser(): void {
+    this.userService.clearSelectedUser();
+    this.selectedUser = null;
   }
 
   // Safe navigation for templates

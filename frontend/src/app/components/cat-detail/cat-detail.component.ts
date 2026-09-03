@@ -17,19 +17,6 @@ export class CatDetailComponent implements OnInit {
   isLoading = false;
   error: string | null = null;
   selectedUser: User | null = null;
-  
-  // Safe navigation for templates
-  get catName(): string {
-    return this.cat?.name || '';
-  }
-  
-  get catId(): number {
-    return this.cat?.id || 0;
-  }
-  
-  get catActive(): boolean {
-    return this.cat?.active || false;
-  }
 
   constructor(
     private route: ActivatedRoute,
@@ -109,5 +96,35 @@ export class CatDetailComponent implements OnInit {
         console.error('Error deleting meal:', err);
       }
     });
+  }
+
+  // Safe navigation for templates
+  get catName(): string {
+    return this.cat?.name || '';
+  }
+  
+  get catId(): number {
+    return this.cat?.id || 0;
+  }
+  
+  get catActive(): boolean {
+    return this.cat?.active || false;
+  }
+
+  formatDate(date: string | Date): string {
+    if (!date) return 'N/A';
+    
+    const d = new Date(date);
+    const days = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+    const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+    
+    const dayName = days[d.getDay()];
+    const day = String(d.getDate()).padStart(2, '0');
+    const monthName = months[d.getMonth()];
+    const year = d.getFullYear();
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    
+    return `${dayName} ${day} ${monthName} ${year}, ${hours}:${minutes}`;
   }
 }

@@ -99,7 +99,7 @@
   <div class="current-selection" *ngIf="selectedUser">
     <div class="alert alert-info">
       <strong>Utilisateur actuellement sélectionné :</strong> {{ selectedUserName }}
-      <button class="btn btn-outline-danger btn-sm" (click)="userService.clearSelectedUser(); selectedUser = null;">
+      <button class="btn btn-outline-danger btn-sm" (click)="clearSelectedUser()">
         Désélectionner
       </button>
     </div>
