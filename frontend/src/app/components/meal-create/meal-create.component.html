@@ -110,7 +110,7 @@
           Création en cours...
         </span>
       </button>
-      <a href="/meals" class="btn btn-secondary btn-lg" [disabled]="isLoading">
+      <a href="/meals" class="btn btn-secondary btn-lg" [attr.disabled]="isLoading ? 'disabled' : null">
         Annuler
       </a>
     </div>
