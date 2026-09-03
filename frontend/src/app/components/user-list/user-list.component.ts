@@ -115,4 +115,9 @@ export class UserListComponent implements OnInit {
     this.userService.setSelectedUser(user);
     this.selectedUser = user;
   }
+
+  // Safe navigation for templates
+  get selectedUserName(): string {
+    return this.selectedUser?.name || '';
+  }
 }

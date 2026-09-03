@@ -17,6 +17,19 @@ export class CatDetailComponent implements OnInit {
   isLoading = false;
   error: string | null = null;
   selectedUser: User | null = null;
+  
+  // Safe navigation for templates
+  get catName(): string {
+    return this.cat?.name || '';
+  }
+  
+  get catId(): number {
+    return this.cat?.id || 0;
+  }
+  
+  get catActive(): boolean {
+    return this.cat?.active || false;
+  }
 
   constructor(
     private route: ActivatedRoute,

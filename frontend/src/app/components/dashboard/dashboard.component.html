@@ -100,7 +100,7 @@
         <tbody>
           <tr *ngFor="let meal of recentMeals">
             <td>{{ meal.Cat?.name }}</td>
-            <td>{{ meal.fed_at_formatted || (meal.fed_at | date:'fullDate') }}</td>
+            <td>{{ meal.fed_at_formatted || formatDate(meal.fed_at) }}</td>
             <td>{{ meal.User?.name }}</td>
             <td>{{ meal.sachets_used }}</td>
             <td>

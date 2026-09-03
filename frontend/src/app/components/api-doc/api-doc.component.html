@@ -100,12 +100,12 @@
     <div class="example">
       <h4>Créer un nouveau repas</h4>
       <pre><code>POST {{ apiUrl }}/meals
-{
+{{ '{' }}
   "cat_id": 1,
   "user_id": 1,
   "fed_at": "2026-01-05T13:40:00Z",
   "sachets_used": 1
-}</code></pre>
+{{ '}' }}</code></pre>
     </div>
     
     <div class="example">
@@ -116,11 +116,11 @@
     <div class="example">
       <h4>Ajouter du stock</h4>
       <pre><code>POST {{ apiUrl }}/stock
-{
+{{ '{' }}
   "sachets_added": 50,
   "user_id": 1,
   "note": "Réapprovisionnement mensuel"
-}</code></pre>
+{{ '}' }}</code></pre>
     </div>
   </div>
 </div>

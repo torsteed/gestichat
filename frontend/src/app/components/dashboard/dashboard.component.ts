@@ -109,4 +109,21 @@ export class DashboardComponent implements OnInit {
   refreshDashboard(): void {
     this.loadDashboardData();
   }
+
+  formatDate(date: string | Date): string {
+    if (!date) return 'N/A';
+    
+    const d = new Date(date);
+    const days = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+    const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+    
+    const dayName = days[d.getDay()];
+    const day = String(d.getDate()).padStart(2, '0');
+    const monthName = months[d.getMonth()];
+    const year = d.getFullYear();
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    
+    return `${dayName} ${day} ${monthName} ${year}, ${hours}:${minutes}`;
+  }
 }

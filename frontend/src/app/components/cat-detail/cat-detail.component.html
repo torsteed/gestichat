@@ -2,10 +2,10 @@
 
 <div class="cat-detail-container" *ngIf="cat">
   <div class="page-header">
-    <h1>Détails du chat : {{ cat.name }}</h1>
+    <h1>Détails du chat : {{ catName }}</h1>
     <div class="cat-status">
-      <span class="badge bg-success" *ngIf="cat.active">Actif</span>
-      <span class="badge bg-secondary" *ngIf="!cat.active">Inactif</span>
+      <span class="badge bg-success" *ngIf="catActive">Actif</span>
+      <span class="badge bg-secondary" *ngIf="!catActive">Inactif</span>
     </div>
   </div>
 
@@ -28,13 +28,13 @@
       <div class="card-body">
         <div class="row">
           <div class="col-md-6">
-            <p><strong>Nom :</strong> {{ cat.name }}</p>
-            <p><strong>ID :</strong> {{ cat.id }}</p>
+            <p><strong>Nom :</strong> {{ catName }}</p>
+            <p><strong>ID :</strong> {{ catId }}</p>
           </div>
           <div class="col-md-6">
             <p><strong>Statut :</strong> 
-              <span *ngIf="cat.active" class="text-success">Actif</span>
-              <span *ngIf="!cat.active" class="text-secondary">Inactif</span>
+              <span *ngIf="catActive" class="text-success">Actif</span>
+              <span *ngIf="!catActive" class="text-secondary">Inactif</span>
             </p>
           </div>
         </div>
@@ -72,7 +72,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let meal of meals" [class.recent-row]="meal.isRecent">
-            <td>{{ meal.fed_at_formatted || (meal.fed_at | date:'fullDate') }}</td>
+            <td>{{ meal.fed_at_formatted || formatDate(meal.fed_at) }}</td>
             <td>{{ meal.User?.name }}</td>
             <td>{{ meal.sachets_used }}</td>
             <td>

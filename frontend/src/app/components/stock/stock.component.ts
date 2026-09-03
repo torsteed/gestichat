@@ -110,6 +110,10 @@ export class StockComponent implements OnInit {
     return user ? user.name : 'Inconnu';
   }
 
+  getTotalAdded(): number {
+    return this.stockHistory.reduce((sum: number, s: any) => sum + s.sachets_added, 0);
+  }
+
   formatDate(date: string | Date): string {
     if (!date) return 'N/A';
     

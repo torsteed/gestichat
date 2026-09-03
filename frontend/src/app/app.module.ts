@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -34,6 +35,7 @@ import { routes } from './app.routes';
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     FormsModule,
     HttpClientModule,
     RouterModule.forRoot(routes)
