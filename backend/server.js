@@ -166,6 +166,36 @@ app.post('/api/users', async (req, res) => {
   }
 });
 
+app.delete('/api/users/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    await user.destroy();
+    res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.put('/api/users/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    if (name) user.name = name;
+    await user.save();
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Cats
 app.get('/api/cats', async (req, res) => {
   try {
@@ -201,6 +231,20 @@ app.put('/api/cats/:id', async (req, res) => {
     if (active !== undefined) cat.active = active;
     await cat.save();
     res.json(cat);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.delete('/api/cats/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const cat = await Cat.findByPk(id);
+    if (!cat) {
+      return res.status(404).json({ error: 'Cat not found' });
+    }
+    await cat.destroy();
+    res.json({ message: 'Cat deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

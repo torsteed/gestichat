@@ -63,7 +63,7 @@ export class CatListComponent implements OnInit {
         this.loadCats();
       },
       error: (err) => {
-        this.error = 'Impossible de créer le chat';
+        this.error = 'Impossible de cr\u00e9er le chat';
         this.isLoading = false;
         console.error('Error creating cat:', err);
       }
@@ -105,15 +105,14 @@ export class CatListComponent implements OnInit {
   }
 
   deleteCat(catId: number): void {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce chat ?')) {
+    if (!confirm('\u00cates-vous s\u00fbr de vouloir supprimer ce chat ?')) {
       return;
     }
 
     this.isLoading = true;
     this.error = null;
     
-    // Soft delete by setting active to false
-    this.apiService.updateCat(catId, '', false).subscribe({
+    this.apiService.deleteCat(catId).subscribe({
       next: () => {
         this.loadCats();
       },
@@ -128,7 +127,7 @@ export class CatListComponent implements OnInit {
   quickAddMeal(catId: number): void {
     const user = this.userService.getSelectedUser();
     if (!user) {
-      this.error = 'Veuillez sélectionner un utilisateur avant d\'ajouter un repas';
+      this.error = 'Veuillez s\u00e9lectionner un utilisateur avant d\'ajouter un repas';
       return;
     }
 

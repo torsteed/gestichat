@@ -61,7 +61,7 @@ export class UserListComponent implements OnInit {
         this.loadUsers();
       },
       error: (err) => {
-        this.error = 'Impossible de créer l\'utilisateur';
+        this.error = 'Impossible de cr\u00e9er l\'utilisateur';
         this.isLoading = false;
         console.error('Error creating user:', err);
       }
@@ -87,9 +87,7 @@ export class UserListComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
     
-    // Note: In a real implementation, we would have a PUT endpoint for users
-    // For now, we'll just reload the list
-    this.apiService.getUsers().subscribe({
+    this.apiService.updateUser(this.editUserId, this.editUserName).subscribe({
       next: () => {
         this.cancelEdit();
         this.loadUsers();
@@ -103,12 +101,28 @@ export class UserListComponent implements OnInit {
   }
 
   deleteUser(userId: number): void {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
+    if (!confirm('\u00cates-vous s\u00fbr de vouloir supprimer cet utilisateur ?')) {
       return;
     }
 
-    // Note: In a real implementation, we would have a DELETE endpoint for users
-    this.error = 'La suppression des utilisateurs n\'est pas encore implémentée dans l\'API';
+    this.isLoading = true;
+    this.error = null;
+    
+    this.apiService.deleteUser(userId).subscribe({
+      next: () => {
+        this.loadUsers();
+        // Clear selection if deleted user was selected
+        if (this.selectedUser?.id === userId) {
+          this.clearSelectedUser();
+          this.selectedUser = null;
+        }
+      },
+      error: (err) => {
+        this.error = 'Impossible de supprimer l\'utilisateur';
+        this.isLoading = false;
+        console.error('Error deleting user:', err);
+      }
+    });
   }
 
   selectUser(user: User): void {

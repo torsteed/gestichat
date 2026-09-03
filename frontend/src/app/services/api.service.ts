@@ -47,6 +47,18 @@ export class ApiService {
     );
   }
 
+  updateUser(id: number, name: string): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/users/${id}`, { name }, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteUser(id: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/users/${id}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   // Cats
   getCats(): Observable<Cat[]> {
     return this.http.get<Cat[]>(`${this.apiUrl}/cats`).pipe(
@@ -62,6 +74,12 @@ export class ApiService {
 
   updateCat(id: number, name: string, active: boolean): Observable<Cat> {
     return this.http.put<Cat>(`${this.apiUrl}/cats/${id}`, { name, active }, httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteCat(id: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.apiUrl}/cats/${id}`).pipe(
       catchError(this.handleError)
     );
   }
