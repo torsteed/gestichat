@@ -1,0 +1,107 @@
+<app-header></app-header>
+
+<div class="user-list-container">
+  <div class="page-header">
+    <h1>Liste des humains</h1>
+    <p>Gérez les utilisateurs de l'application</p>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <!-- Create User Form -->
+  <div class="form-container">
+    <h3>Ajouter un nouvel utilisateur</h3>
+    <div class="form-group">
+      <label for="newUserName">Nom de l'utilisateur</label>
+      <input 
+        type="text" 
+        id="newUserName" 
+        [(ngModel)]="newUserName" 
+        placeholder="Entrez le nom de l'utilisateur"
+        [disabled]="isLoading"
+        (keyup.enter)="createUser()"
+      />
+    </div>
+    <button class="btn btn-primary" (click)="createUser()" [disabled]="isLoading || !newUserName.trim()">
+      <i class="fas fa-plus"></i> Ajouter
+    </button>
+  </div>
+
+  <!-- Users Table -->
+  <div *ngIf="users.length === 0" class="alert alert-info">
+    Aucun utilisateur enregistré. Ajoutez votre premier utilisateur !
+  </div>
+
+  <div class="table-responsive" *ngIf="users.length > 0">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>ID</th>
+          <th>Sélectionné</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>
+            <span *ngIf="editUserId !== user.id">{{ user.name }}</span>
+            <input 
+              *ngIf="editUserId === user.id"
+              type="text"
+              [(ngModel)]="editUserName"
+              class="form-control form-control-sm"
+              (keyup.enter)="updateUser()"
+              (keyup.escape)="cancelEdit()"
+            />
+          </td>
+          <td>{{ user.id }}</td>
+          <td>
+            <span *ngIf="selectedUser?.id === user.id" class="badge bg-primary">Sélectionné</span>
+            <button *ngIf="selectedUser?.id !== user.id" 
+                    class="btn btn-outline-primary btn-sm" 
+                    (click)="selectUser(user)">
+              Sélectionner
+            </button>
+          </td>
+          <td>
+            <div *ngIf="editUserId !== user.id" class="action-buttons">
+              <button class="btn btn-warning btn-sm" (click)="startEdit(user)" title="Modifier">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-danger btn-sm" (click)="deleteUser(user.id)" title="Supprimer">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+            <div *ngIf="editUserId === user.id" class="action-buttons">
+              <button class="btn btn-success btn-sm" (click)="updateUser()" title="Enregistrer">
+                <i class="fas fa-check"></i>
+              </button>
+              <button class="btn btn-secondary btn-sm" (click)="cancelEdit()" title="Annuler">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Current Selection Info -->
+  <div class="current-selection" *ngIf="selectedUser">
+    <div class="alert alert-info">
+      <strong>Utilisateur actuellement sélectionné :</strong> {{ selectedUser.name }}
+      <button class="btn btn-outline-danger btn-sm" (click="userService.clearSelectedUser(); selectedUser = null;">
+        Désélectionner
+      </button>
+    </div>
+  </div>
+</div>

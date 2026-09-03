@@ -1,0 +1,126 @@
+<app-header></app-header>
+
+<div class="api-doc-container">
+  <div class="page-header">
+    <h1>Documentation API - Gestichat</h1>
+    <p>Documentation des endpoints REST disponibles</p>
+    <div class="api-info">
+      <strong>URL de base :</strong> <code>{{ apiUrl }}</code>
+    </div>
+  </div>
+
+  <!-- Endpoints Section -->
+  <div class="endpoints-section">
+    <h2>Endpoints disponibles</h2>
+    
+    <div class="endpoint-group" *ngFor="let endpoint of endpoints">
+      <div class="endpoint-header">
+        <span class="method-badge" [class.get]="endpoint.method === 'GET'" 
+                                  [class.post]="endpoint.method === 'POST'" 
+                                  [class.put]="endpoint.method === 'PUT'" 
+                                  [class.delete]="endpoint.method === 'DELETE'">
+          {{ endpoint.method }}
+        </span>
+        <span class="endpoint-path">{{ endpoint.path }}</span>
+      </div>
+      
+      <div class="endpoint-description">
+        <p>{{ endpoint.description }}</p>
+      </div>
+      
+      <div class="endpoint-details">
+        <div class="detail-row">
+          <span class="detail-label">Réponse :</span>
+          <span class="detail-value"><code>{{ endpoint.response }}</code></span>
+        </div>
+        
+        <div *ngIf="endpoint.parameters.length > 0" class="parameters-section">
+          <span class="detail-label">Paramètres :</span>
+          <table class="parameters-table">
+            <thead>
+              <tr>
+                <th>Nom</th>
+                <th>Type</th>
+                <th>Requis</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let param of endpoint.parameters">
+                <td><code>{{ param.name }}</code></td>
+                <td><code>{{ param.type }}</code></td>
+                <td>
+                  <span class="badge bg-danger" *ngIf="param.required">Oui</span>
+                  <span class="badge bg-secondary" *ngIf="!param.required">Non</span>
+                </td>
+                <td>{{ param.description }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Models Section -->
+  <div class="models-section">
+    <h2>Modèles de données</h2>
+    
+    <div class="model-group" *ngFor="let model of models">
+      <h3>{{ model.name }}</h3>
+      
+      <table class="model-table">
+        <thead>
+          <tr>
+            <th>Propriété</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let prop of model.properties">
+            <td><code>{{ prop.name }}</code></td>
+            <td><code>{{ prop.type }}</code></td>
+            <td>{{ prop.description }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Example Usage -->
+  <div class="examples-section">
+    <h2>Exemples d'utilisation</h2>
+    
+    <div class="example">
+      <h4>Récupérer tous les chats</h4>
+      <pre><code>GET {{ apiUrl }}/cats</code></pre>
+    </div>
+    
+    <div class="example">
+      <h4>Créer un nouveau repas</h4>
+      <pre><code>POST {{ apiUrl }}/meals
+{
+  "cat_id": 1,
+  "user_id": 1,
+  "fed_at": "2026-01-05T13:40:00Z",
+  "sachets_used": 1
+}</code></pre>
+    </div>
+    
+    <div class="example">
+      <h4>Récupérer le stock actuel</h4>
+      <pre><code>GET {{ apiUrl }}/stock/current</code></pre>
+    </div>
+    
+    <div class="example">
+      <h4>Ajouter du stock</h4>
+      <pre><code>POST {{ apiUrl }}/stock
+{
+  "sachets_added": 50,
+  "user_id": 1,
+  "note": "Réapprovisionnement mensuel"
+}</code></pre>
+    </div>
+  </div>
+</div>

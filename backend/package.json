@@ -1,0 +1,28 @@
+{
+  "name": "gestichat-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Gestichat - Cat meal tracking application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mysql2": "^3.6.0",
+    "sequelize": "^6.35.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "keywords": [
+    "express",
+    "mysql",
+    "api",
+    "rest"
+  ],
+  "author": "",
+  "license": "ISC"
+}

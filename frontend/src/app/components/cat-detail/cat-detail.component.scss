@@ -1,0 +1,152 @@
+/* Cat Detail specific styles */
+.cat-detail-container {
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  
+  .page-header {
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    
+    h1 {
+      font-size: 28px;
+      color: #333;
+      margin: 0;
+    }
+    
+    .cat-status {
+      .badge {
+        font-size: 16px;
+        padding: 8px 12px;
+      }
+    }
+  }
+  
+  .cat-info-card {
+    margin-bottom: 30px;
+    
+    .card {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      
+      .card-header {
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+      }
+      
+      .card-body {
+        p {
+          margin-bottom: 10px;
+          font-size: 16px;
+          
+          strong {
+            color: #007bff;
+          }
+        }
+      }
+    }
+  }
+  
+  .quick-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    
+    .btn {
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+    
+    .btn-round {
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      
+      i {
+        margin-right: 0;
+      }
+    }
+  }
+  
+  .meals-section {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    
+    h3 {
+      font-size: 20px;
+      color: #007bff;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #007bff;
+      padding-bottom: 10px;
+    }
+    
+    .recent-row {
+      background-color: #fff3cd !important;
+    }
+    
+    tfoot {
+      td {
+        text-align: right;
+        font-weight: bold;
+        padding-top: 15px;
+        border-top: 2px solid #dee2e6;
+      }
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cat-detail-container {
+    padding: 10px;
+    
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      
+      h1 {
+        font-size: 22px;
+      }
+    }
+    
+    .quick-actions {
+      flex-direction: column;
+      gap: 8px;
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .btn-round {
+        width: 100%;
+        border-radius: 8px;
+      }
+    }
+    
+    .table {
+      th, td {
+        padding: 8px;
+        font-size: 14px;
+      }
+    }
+    
+    .cat-info-card {
+      .card-body {
+        p {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}

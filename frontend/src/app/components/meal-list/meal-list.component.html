@@ -1,0 +1,148 @@
+<app-header></app-header>
+
+<div class="meal-list-container">
+  <div class="page-header">
+    <h1>Liste des repas</h1>
+    <p>Gérez tous les repas enregistrés</p>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <button class="btn btn-outline-secondary" (click)="toggleFilters()">
+      <i class="fas fa-filter"></i> Filtres
+    </button>
+    
+    <div class="filters-content" *ngIf="showFilters">
+      <div class="filter-group">
+        <label>Chat :</label>
+        <select [(ngModel)]="filterCatId" (change)="applyFilters()">
+          <option [value]="null">Tous les chats</option>
+          <option *ngFor="let cat of cats" [value]="cat.id">{{ cat.name }}</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label>Utilisateur :</label>
+        <select [(ngModel)]="filterUserId" (change)="applyFilters()">
+          <option [value]="null">Tous les utilisateurs</option>
+          <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label>Limite :</label>
+        <select [(ngModel)]="filterLimit" (change)="applyFilters()">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="0">Tous</option>
+        </select>
+      </div>
+      
+      <button class="btn btn-outline-danger" (click)="resetFilters()">
+        <i class="fas fa-times"></i> Réinitialiser
+      </button>
+    </div>
+  </div>
+
+  <!-- Create Meal Form -->
+  <div class="form-container">
+    <h3>Ajouter un nouveau repas</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="newMealCat">Chat *</label>
+        <select id="newMealCat" [(ngModel)]="newMeal.cat_id">
+          <option value="0">Sélectionnez un chat</option>
+          <option *ngFor="let cat of cats" [value]="cat.id">{{ cat.name }}</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="newMealUser">Utilisateur *</label>
+        <select id="newMealUser" [(ngModel)]="newMeal.user_id">
+          <option value="0">Sélectionnez un utilisateur</option>
+          <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="newMealDate">Date/Heure</label>
+        <input 
+          type="datetime-local" 
+          id="newMealDate" 
+          [(ngModel)]="newMeal.fed_at"
+        />
+      </div>
+      
+      <div class="form-group">
+        <label for="newMealSachets">Sachets utilisés</label>
+        <input 
+          type="number" 
+          id="newMealSachets" 
+          [(ngModel)]="newMeal.sachets_used" 
+          min="1" 
+          max="10"
+        />
+      </div>
+    </div>
+    
+    <div class="form-actions">
+      <button class="btn btn-primary" (click)="createMeal()" [disabled]="isLoading || !newMeal.cat_id || !newMeal.user_id">
+        <i class="fas fa-plus"></i> Ajouter
+      </button>
+      <button class="btn btn-outline-secondary" (click)="resetForm()" [disabled]="isLoading">
+        <i class="fas fa-times"></i> Réinitialiser
+      </button>
+    </div>
+  </div>
+
+  <!-- Meals Table -->
+  <div *ngIf="meals.length === 0" class="alert alert-info">
+    Aucun repas enregistré. Ajoutez votre premier repas !
+  </div>
+
+  <div class="table-responsive" *ngIf="meals.length > 0">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Chat</th>
+          <th>Date/Heure</th>
+          <th>Utilisateur</th>
+          <th>Sachets</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let meal of meals">
+          <td>{{ meal.Cat?.name || getCatName(meal.cat_id) }}</td>
+          <td>{{ meal.fed_at_formatted || formatDate(meal.fed_at) }}</td>
+          <td>{{ meal.User?.name || getUserName(meal.user_id) }}</td>
+          <td>{{ meal.sachets_used }}</td>
+          <td>
+            <button class="btn btn-danger btn-sm" (click)="deleteMeal(meal.id)" title="Supprimer">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="5">
+            <strong>Total :</strong> {{ meals.length }} repas
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>

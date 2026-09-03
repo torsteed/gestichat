@@ -1,0 +1,118 @@
+<app-header></app-header>
+
+<div class="dashboard">
+  <h1 class="welcome-title">Bienvenue sur Gestichat !</h1>
+
+  <div *ngIf="isLoading" class="text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <!-- Stock Alert Section -->
+  <div class="section">
+    <div class="stock-alert">
+      <strong>Gestichat - service Gestiroir vous informe</strong>
+      <div class="mt-2">
+        Le stock actuel estimé du tiroir est d'environ :
+        <span class="stock-value" [class.low]="getStockStatus() === 'low'" 
+              [class.negative]="getStockStatus() === 'negative'" 
+              [class.normal]="getStockStatus() === 'normal'">
+          {{ currentStock?.currentStock || 0 }} sachets
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Latest Meals by Cat Section -->
+  <div class="section">
+    <h2 class="section-title">Derniers repas par chat</h2>
+    
+    <div *ngIf="latestMealsByCat.length === 0" class="alert alert-info">
+      Aucun repas enregistré pour les chats actifs.
+    </div>
+    
+    <table class="table cat-meals-table" *ngIf="latestMealsByCat.length > 0">
+      <thead>
+        <tr>
+          <th>Chat</th>
+          <th>Dernier repas</th>
+          <th>Donné par</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of latestMealsByCat" 
+            [class.recent-row]="item.latestMeal?.isRecent">
+          <td>
+            <strong>{{ item.cat.name }}</strong>
+            <span *ngIf="!item.cat.active" class="badge bg-secondary">Inactif</span>
+          </td>
+          <td>
+            <span *ngIf="item.latestMeal">{{ item.latestMeal.fed_at_formatted }}</span>
+            <span *ngIf="!item.latestMeal" class="text-muted">Aucun repas</span>
+          </td>
+          <td>
+            <span *ngIf="item.latestMeal">{{ item.latestMeal.User?.name }}</span>
+            <span *ngIf="!item.latestMeal">-</span>
+          </td>
+          <td>
+            <button class="btn btn-primary btn-round" 
+                    (click)="quickAddMeal(item.cat.id)" 
+                    title="Ajouter un repas pour {{ item.cat.name }}">
+              <i class="fas fa-plus"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <div class="mt-3">
+      <a href="/cats" class="btn btn-outline-primary">
+        <i class="fas fa-plus"></i> Tous les chats
+      </a>
+    </div>
+  </div>
+
+  <!-- Recent Meals Section -->
+  <div class="section">
+    <h2 class="section-title">Tous les derniers repas</h2>
+    
+    <div *ngIf="recentMeals.length === 0" class="alert alert-info">
+      Aucun repas enregistré.
+    </div>
+    
+    <div class="table-responsive" *ngIf="recentMeals.length > 0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Chat</th>
+            <th>Date/Heure</th>
+            <th>Personne</th>
+            <th>Sachets</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let meal of recentMeals">
+            <td>{{ meal.Cat?.name }}</td>
+            <td>{{ meal.fed_at_formatted || (meal.fed_at | date:'fullDate') }}</td>
+            <td>{{ meal.User?.name }}</td>
+            <td>{{ meal.sachets_used }}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" 
+                      (click)="deleteMeal(meal.id)" 
+                      title="Supprimer ce repas">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

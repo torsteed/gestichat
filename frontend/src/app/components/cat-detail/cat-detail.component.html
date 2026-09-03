@@ -1,0 +1,99 @@
+<app-header></app-header>
+
+<div class="cat-detail-container" *ngIf="cat">
+  <div class="page-header">
+    <h1>Détails du chat : {{ cat.name }}</h1>
+    <div class="cat-status">
+      <span class="badge bg-success" *ngIf="cat.active">Actif</span>
+      <span class="badge bg-secondary" *ngIf="!cat.active">Inactif</span>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <!-- Cat Info Card -->
+  <div class="cat-info-card">
+    <div class="card">
+      <div class="card-header">
+        <h5>Informations du chat</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong>Nom :</strong> {{ cat.name }}</p>
+            <p><strong>ID :</strong> {{ cat.id }}</p>
+          </div>
+          <div class="col-md-6">
+            <p><strong>Statut :</strong> 
+              <span *ngIf="cat.active" class="text-success">Actif</span>
+              <span *ngIf="!cat.active" class="text-secondary">Inactif</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <button class="btn btn-primary btn-round" (click)="quickAddMeal()" title="Ajouter un repas">
+      <i class="fas fa-plus"></i> Ajouter un repas
+    </button>
+    <a href="/cats" class="btn btn-outline-secondary">
+      <i class="fas fa-arrow-left"></i> Retour à la liste
+    </a>
+  </div>
+
+  <!-- Meals History -->
+  <div class="meals-section">
+    <h3>Historique des repas</h3>
+    
+    <div *ngIf="meals.length === 0" class="alert alert-info">
+      Aucun repas enregistré pour ce chat.
+    </div>
+    
+    <div class="table-responsive" *ngIf="meals.length > 0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date/Heure</th>
+            <th>Donné par</th>
+            <th>Sachets utilisés</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let meal of meals" [class.recent-row]="meal.isRecent">
+            <td>{{ meal.fed_at_formatted || (meal.fed_at | date:'fullDate') }}</td>
+            <td>{{ meal.User?.name }}</td>
+            <td>{{ meal.sachets_used }}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" (click)="deleteMeal(meal.id)" title="Supprimer">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4">
+              <strong>Total des repas :</strong> {{ meals.length }}
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!cat && !isLoading && !error" class="alert alert-warning">
+  Chat non trouvé.
+</div>

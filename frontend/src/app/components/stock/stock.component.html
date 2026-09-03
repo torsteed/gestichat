@@ -1,0 +1,130 @@
+<app-header></app-header>
+
+<div class="stock-container">
+  <div class="page-header">
+    <h1>Gestion du stock (Gestiroir)</h1>
+    <p>Suivez et gérez le stock de sachets pour vos chats</p>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <!-- Current Stock Display -->
+  <div class="current-stock-section">
+    <div class="stock-card">
+      <h3>Stock actuel</h3>
+      <div class="stock-value-display">
+        <span class="stock-value" [class.low]="getStockStatus() === 'low'" 
+              [class.negative]="getStockStatus() === 'negative'" 
+              [class.normal]="getStockStatus() === 'normal'">
+          {{ currentStock?.currentStock || 0 }}
+        </span>
+        <span class="stock-label">sachets</span>
+      </div>
+      <div class="stock-status">
+        <span *ngIf="getStockStatus() === 'negative'" class="text-danger">
+          <i class="fas fa-exclamation-triangle"></i> Stock négatif !
+        </span>
+        <span *ngIf="getStockStatus() === 'low'" class="text-warning">
+          <i class="fas fa-exclamation-circle"></i> Stock faible
+        </span>
+        <span *ngIf="getStockStatus() === 'normal'" class="text-success">
+          <i class="fas fa-check-circle"></i> Stock normal
+        </span>
+      </div>
+      <p class="stock-info">
+        Le stock est calculé automatiquement :<br>
+        <strong>Total ajouté</strong> - <strong>Total consommé</strong> = <strong>Stock actuel</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- Add Stock Form -->
+  <div class="form-container">
+    <h3>Ajouter du stock</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="newStockQuantity">Quantité de sachets *</label>
+        <input 
+          type="number" 
+          id="newStockQuantity" 
+          [(ngModel)]="newStock.sachets_added" 
+          min="1" 
+          max="1000"
+          placeholder="Nombre de sachets"
+        />
+      </div>
+      
+      <div class="form-group">
+        <label for="newStockUser">Utilisateur *</label>
+        <select id="newStockUser" [(ngModel)]="newStock.user_id">
+          <option value="0">Sélectionnez un utilisateur</option>
+          <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="newStockNote">Note (optionnelle)</label>
+        <input 
+          type="text" 
+          id="newStockNote" 
+          [(ngModel)]="newStock.note" 
+          placeholder="Ex: Réapprovisionnement hebdomadaire"
+        />
+      </div>
+    </div>
+    
+    <div class="form-actions">
+      <button class="btn btn-primary" (click)="addStock()" [disabled]="isLoading || !newStock.sachets_added || newStock.sachets_added <= 0 || !newStock.user_id">
+        <i class="fas fa-plus"></i> Ajouter au stock
+      </button>
+      <button class="btn btn-outline-secondary" (click)="resetForm()" [disabled]="isLoading">
+        <i class="fas fa-times"></i> Réinitialiser
+      </button>
+    </div>
+  </div>
+
+  <!-- Stock History -->
+  <div class="stock-history-section">
+    <h3>Historique des réapprovisionnements</h3>
+    
+    <div *ngIf="stockHistory.length === 0" class="alert alert-info">
+      Aucun réapprovisionnement enregistré.
+    </div>
+    
+    <div class="table-responsive" *ngIf="stockHistory.length > 0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Quantité ajoutée</th>
+            <th>Utilisateur</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stock of stockHistory">
+            <td>{{ formatDate(stock.added_at) }}</td>
+            <td class="text-success">+{{ stock.sachets_added }} sachets</td>
+            <td>{{ getUserName(stock.user_id) }}</td>
+            <td>{{ stock.note || '-' }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4">
+              <strong>Total ajouté :</strong> +{{ stockHistory.reduce((sum, s) => sum + s.sachets_added, 0) }} sachets
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
