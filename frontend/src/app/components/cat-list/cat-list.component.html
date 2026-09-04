@@ -1,9 +1,9 @@
 <app-header></app-header>
 
-<div class="cat-list-container">
-  <div class="page-header">
-    <h1>Liste des chats</h1>
-    <p>Gérez tous vos chats et leurs repas</p>
+<div class="container py-4">
+  <div class="text-center mb-5">
+    <h1 class="display-6">Liste des chats</h1>
+    <p class="text-muted">Grez tous vos chats et leurs repas</p>
   </div>
 
   <div *ngIf="isLoading" class="text-center">
@@ -17,96 +17,102 @@
   </div>
 
   <!-- Create Cat Form -->
-  <div class="form-container">
-    <h3>Ajouter un nouveau chat</h3>
-    <div class="form-group">
-      <label for="newCatName">Nom du chat</label>
-      <input 
-        type="text" 
-        id="newCatName" 
-        [(ngModel)]="newCatName" 
-        placeholder="Entrez le nom du chat"
-        [disabled]="isLoading"
-        (keyup.enter)="createCat()"
-      />
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h3 class="card-title h5 mb-3">Ajouter un nouveau chat</h3>
+      <div class="input-group mb-3">
+        <input 
+          type="text" 
+          id="newCatName" 
+          class="form-control"
+          [(ngModel)]="newCatName" 
+          placeholder="Entrez le nom du chat"
+          [disabled]="isLoading"
+          (keyup.enter)="createCat()"
+        />
+        <button class="btn btn-primary" (click)="createCat()" [disabled]="isLoading || !newCatName.trim()">
+          <i class="fas fa-plus"></i> Ajouter
+        </button>
+      </div>
     </div>
-    <button class="btn btn-primary" (click)="createCat()" [disabled]="isLoading || !newCatName.trim()">
-      <i class="fas fa-plus"></i> Ajouter
-    </button>
   </div>
 
   <!-- Cats Table -->
   <div *ngIf="cats.length === 0" class="alert alert-info">
-    Aucun chat enregistré. Ajoutez votre premier chat !
+    Aucun chat enregistr. Ajoutez votre premier chat !
   </div>
 
-  <div class="table-responsive" *ngIf="cats.length > 0">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Nom</th>
-          <th>Statut</th>
-          <th>Actions rapides</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let cat of cats">
-          <td>
-            <span *ngIf="editCatId !== cat.id">{{ cat.name }}</span>
-            <input 
-              *ngIf="editCatId === cat.id"
-              type="text"
-              [(ngModel)]="editCatName"
-              class="form-control form-control-sm"
-              (keyup.enter)="updateCat()"
-              (keyup.escape)="cancelEdit()"
-            />
-          </td>
-          <td>
-            <span *ngIf="editCatId !== cat.id">
-              <span class="badge bg-success" *ngIf="cat.active">Actif</span>
-              <span class="badge bg-secondary" *ngIf="!cat.active">Inactif</span>
-            </span>
-            <select 
-              *ngIf="editCatId === cat.id"
-              [(ngModel)]="editCatActive"
-              class="form-control form-control-sm"
-            >
-              <option [value]="true">Actif</option>
-              <option [value]="false">Inactif</option>
-            </select>
-          </td>
-          <td>
-            <button class="btn btn-primary btn-round btn-sm" 
-                    (click)="quickAddMeal(cat.id)" 
-                    title="Ajouter un repas pour {{ cat.name }}">
-              <i class="fas fa-plus"></i>
-            </button>
-            <a href="/cats/{{ cat.id }}" class="btn btn-info btn-sm" title="Voir les détails">
-              <i class="fas fa-info-circle"></i>
-            </a>
-          </td>
-          <td>
-            <div *ngIf="editCatId !== cat.id" class="action-buttons">
-              <button class="btn btn-warning btn-sm" (click)="startEdit(cat)" title="Modifier">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="btn btn-danger btn-sm" (click)="deleteCat(cat.id)" title="Supprimer">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </div>
-            <div *ngIf="editCatId === cat.id" class="action-buttons">
-              <button class="btn btn-success btn-sm" (click)="updateCat()" title="Enregistrer">
-                <i class="fas fa-check"></i>
-              </button>
-              <button class="btn btn-secondary btn-sm" (click)="cancelEdit()" title="Annuler">
-                <i class="fas fa-times"></i>
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="card shadow-sm" *ngIf="cats.length > 0">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Nom</th>
+              <th>Statut</th>
+              <th>Actions rapides</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cat of cats">
+              <td>
+                <span *ngIf="editCatId !== cat.id">{{ cat.name }}</span>
+                <input 
+                  *ngIf="editCatId === cat.id"
+                  type="text"
+                  [(ngModel)]="editCatName"
+                  class="form-control form-control-sm"
+                  (keyup.enter)="updateCat()"
+                  (keyup.escape)="cancelEdit()"
+                />
+              </td>
+              <td>
+                <span *ngIf="editCatId !== cat.id">
+                  <span class="badge bg-success" *ngIf="cat.active">Actif</span>
+                  <span class="badge bg-secondary" *ngIf="!cat.active">Inactif</span>
+                </span>
+                <select 
+                  *ngIf="editCatId === cat.id"
+                  [(ngModel)]="editCatActive"
+                  class="form-select form-select-sm"
+                >
+                  <option [value]="true">Actif</option>
+                  <option [value]="false">Inactif</option>
+                </select>
+              </td>
+              <td>
+                <button class="btn btn-primary btn-sm me-1" 
+                        (click)="quickAddMeal(cat.id)" 
+                        title="Ajouter un repas pour {{ cat.name }}">
+                  <i class="fas fa-plus"></i>
+                </button>
+                <a href="/cats/{{ cat.id }}" class="btn btn-info btn-sm" title="Voir les dtails">
+                  <i class="fas fa-info-circle"></i>
+                </a>
+              </td>
+              <td>
+                <div *ngIf="editCatId !== cat.id" class="d-flex gap-1">
+                  <button class="btn btn-warning btn-sm" (click)="startEdit(cat)" title="Modifier">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-danger btn-sm" (click)="deleteCat(cat.id)" title="Supprimer">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+                <div *ngIf="editCatId === cat.id" class="d-flex gap-1">
+                  <button class="btn btn-success btn-sm" (click)="updateCat()" title="Enregistrer">
+                    <i class="fas fa-check"></i>
+                  </button>
+                  <button class="btn btn-secondary btn-sm" (click)="cancelEdit()" title="Annuler">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>

@@ -1,9 +1,9 @@
 <app-header></app-header>
 
-<div class="stock-container">
-  <div class="page-header">
-    <h1>Gestion du stock (Gestiroir)</h1>
-    <p>Suivez et gérez le stock de sachets pour vos chats</p>
+<div class="container py-4">
+  <div class="text-center mb-5">
+    <h1 class="display-6">Gestion du stock (Gestiroir)</h1>
+    <p class="text-muted">Suivez et grez le stock de sachets pour vos chats</p>
   </div>
 
   <div *ngIf="isLoading" class="text-center">
@@ -17,189 +17,125 @@
   </div>
 
   <!-- Current Stock Display -->
-  <div class="current-stock-section">
-    <div class="stock-card">
-      <h3>Stock actuel</h3>
-      <div class="stock-value-display">
-        <span class="stock-value" [class.low]="getStockStatus() === 'low'" 
-              [class.negative]="getStockStatus() === 'negative'" 
-              [class.normal]="getStockStatus() === 'normal'">
+  <div class="card shadow-sm mb-4">
+    <div class="card-body text-center">
+      <h3 class="card-title h5 mb-3">Stock actuel</h3>
+      <div class="display-4 fw-bold mb-3">
+        <span class="badge " 
+              [class.bg-warning text-dark]="getStockStatus() === 'low'" 
+              [class.bg-danger]="getStockStatus() === 'negative'" 
+              [class.bg-success]="getStockStatus() === 'normal'">
           {{ currentStock?.currentStock || 0 }}
         </span>
-        <span class="stock-label">sachets</span>
       </div>
-      <div class="stock-status">
-        <span *ngIf="getStockStatus() === 'negative'" class="text-danger">
-          <i class="fas fa-exclamation-triangle"></i> Stock négatif !
+      <p class="card-text mb-3">sachets</p>
+      <div class="mb-3">
+        <span *ngIf="getStockStatus() === 'negative'" class="badge bg-danger text-white p-2">
+          <i class="fas fa-exclamation-triangle"></i> Stock ngatif !
         </span>
-        <span *ngIf="getStockStatus() === 'low'" class="text-warning">
+        <span *ngIf="getStockStatus() === 'low'" class="badge bg-warning text-dark p-2">
           <i class="fas fa-exclamation-circle"></i> Stock faible
         </span>
-        <span *ngIf="getStockStatus() === 'normal'" class="text-success">
+        <span *ngIf="getStockStatus() === 'normal'" class="badge bg-success p-2">
           <i class="fas fa-check-circle"></i> Stock normal
         </span>
       </div>
-      <p class="stock-info">
-        Le stock est calculé automatiquement :<br>
-        <strong>Total ajouté</strong> - <strong>Total consommé</strong> = <strong>Stock actuel</strong>
+      <p class="card-text text-muted small">
+        Le stock est calcul automatiquement :<br>
+        <strong>Total ajout</strong> - <strong>Total consomm</strong> = <strong>Stock actuel</strong>
       </p>
-      
-      <div class="stock-actions">
-        <button class="btn btn-danger" (click)="toggleRemoveForm()">
-          <i class="fas fa-minus"></i> Retirer des sachets
-        </button>
-        <button class="btn btn-warning" (click)="toggleSetForm()">
-          <i class="fas fa-edit"></i> Définir une valeur
-        </button>
-      </div>
     </div>
   </div>
 
   <!-- Add Stock Form -->
-  <div class="form-container">
-    <h3>Ajouter du stock</h3>
-    <div class="form-row">
-      <div class="form-group">
-        <label for="newStockQuantity">Quantité de sachets *</label>
-        <input 
-          type="number" 
-          id="newStockQuantity" 
-          [(ngModel)]="newStock.sachets_added" 
-          min="1" 
-          max="1000"
-          placeholder="Nombre de sachets"
-        />
-      </div>
-      
-      <div class="form-group">
-        <label for="newStockUser">Utilisateur *</label>
-        <select id="newStockUser" [(ngModel)]="newStock.user_id">
-          <option value="0">Sélectionnez un utilisateur</option>
-          <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
-        </select>
-      </div>
-      
-      <div class="form-group">
-        <label for="newStockNote">Note (optionnelle)</label>
-        <input 
-          type="text" 
-          id="newStockNote" 
-          [(ngModel)]="newStock.note" 
-          placeholder="Ex: Réapprovisionnement hebdomadaire"
-        />
-      </div>
-    </div>
-    
-    <div class="form-actions">
-      <button class="btn btn-primary" (click)="addStock()" [disabled]="isLoading || !newStock.sachets_added || newStock.sachets_added <= 0 || !newStock.user_id">
-        <i class="fas fa-plus"></i> Ajouter au stock
-      </button>
-      <button class="btn btn-outline-secondary" (click)="resetForm()" [disabled]="isLoading">
-        <i class="fas fa-times"></i> Réinitialiser
-      </button>
-    </div>
-  </div>
-
-  <!-- Remove Stock Form -->
-  <div class="form-container" *ngIf="showRemoveForm">
-    <h3>Retirer des sachets du stock</h3>
-    <div class="form-row">
-      <div class="form-group">
-        <label for="removeStockQuantity">Quantité de sachets *</label>
-        <input type="number" id="removeStockQuantity" [(ngModel)]="removeStockForm.sachets_removed" min="1" max="1000" placeholder="Nombre de sachets à retirer" />
-      </div>
-      
-      <div class="form-group">
-        <label for="removeStockUser">Utilisateur *</label>
-        <select id="removeStockUser" [(ngModel)]="removeStockForm.user_id">
-          <option value="0">Sélectionnez un utilisateur</option>
-          <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
-        </select>
-      </div>
-      
-      <div class="form-group">
-        <label for="removeStockNote">Note (optionnelle)</label>
-        <input type="text" id="removeStockNote" [(ngModel)]="removeStockForm.note" placeholder="Ex: Retrait pour ajustement" />
-      </div>
-    </div>
-    
-    <div class="form-actions">
-      <button class="btn btn-danger" (click)="removeStock()" [disabled]="isLoading || !removeStockForm.sachets_removed || removeStockForm.sachets_removed <= 0 || !removeStockForm.user_id">
-        <i class="fas fa-minus"></i> Retirer du stock
-      </button>
-      <button class="btn btn-outline-secondary" (click)="resetRemoveForm()" [disabled]="isLoading">
-        <i class="fas fa-times"></i> Annuler
-      </button>
-    </div>
-  </div>
-
-  <!-- Set Stock Form -->
-  <div class="form-container" *ngIf="showSetForm">
-    <h3>Définir une valeur de stock</h3>
-    <div class="form-row">
-      <div class="form-group">
-        <label for="setStockValue">Nouvelle valeur *</label>
-        <input type="number" id="setStockValue" [(ngModel)]="setStockForm.new_value" placeholder="Nouvelle valeur du stock" />
-      </div>
-      
-      <div class="form-group">
-        <label for="setStockUser">Utilisateur *</label>
-        <select id="setStockUser" [(ngModel)]="setStockForm.user_id">
-          <option value="0">Sélectionnez un utilisateur</option>
-          <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
-        </select>
-      </div>
-      
-      <div class="form-group">
-        <label for="setStockNote">Note (optionnelle)</label>
-        <input type="text" id="setStockNote" [(ngModel)]="setStockForm.note" placeholder="Ex: Correction d'inventaire" />
-      </div>
-    </div>
-    
-    <div class="form-actions">
-      <button class="btn btn-warning" (click)="setStock()" [disabled]="isLoading || setStockForm.new_value === undefined || !setStockForm.user_id">
-        <i class="fas fa-edit"></i> Définir le stock
-      </button>
-      <button class="btn btn-outline-secondary" (click)="resetSetForm()" [disabled]="isLoading">
-        <i class="fas fa-times"></i> Annuler
-      </button>
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h3 class="card-title h5 mb-4">Ajouter du stock</h3>
+      <form class="row g-3">
+        <div class="col-md-4">
+          <label for="newStockQuantity" class="form-label">Quantit de sachets *</label>
+          <input 
+            type="number" 
+            id="newStockQuantity" 
+            class="form-control"
+            [(ngModel)]="newStock.sachets_added" 
+            min="1" 
+            max="1000"
+            placeholder="Nombre de sachets"
+            name="newStockQuantity"
+          />
+        </div>
+        
+        <div class="col-md-4">
+          <label for="newStockUser" class="form-label">Utilisateur *</label>
+          <select id="newStockUser" class="form-select" [(ngModel)]="newStock.user_id" name="newStockUser">
+            <option value="0">Slectionnez un utilisateur</option>
+            <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+          </select>
+        </div>
+        
+        <div class="col-md-4">
+          <label for="newStockNote" class="form-label">Note (optionnelle)</label>
+          <input 
+            type="text" 
+            id="newStockNote" 
+            class="form-control"
+            [(ngModel)]="newStock.note" 
+            placeholder="Ex: Rapprovisionnement hebdomadaire"
+            name="newStockNote"
+          />
+        </div>
+        
+        <div class="col-12">
+          <div class="d-flex gap-3">
+            <button class="btn btn-primary flex-grow-1" (click)="addStock()" [disabled]="isLoading || !newStock.sachets_added || newStock.sachets_added <= 0 || !newStock.user_id">
+              <i class="fas fa-plus"></i> Ajouter au stock
+            </button>
+            <button class="btn btn-outline-secondary flex-grow-1" (click)="resetForm()" [disabled]="isLoading">
+              <i class="fas fa-times"></i> Rinitialiser
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 
   <!-- Stock History -->
-  <div class="stock-history-section">
-    <h3>Historique des réapprovisionnements</h3>
-    
-    <div *ngIf="stockHistory.length === 0" class="alert alert-info">
-      Aucun réapprovisionnement enregistré.
-    </div>
-    
-    <div class="table-responsive" *ngIf="stockHistory.length > 0">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Quantité ajoutée</th>
-            <th>Utilisateur</th>
-            <th>Note</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let stock of stockHistory">
-            <td>{{ formatDate(stock.added_at) }}</td>
-            <td class="text-success">+{{ stock.sachets_added }} sachets</td>
-            <td>{{ getUserName(stock.user_id) }}</td>
-            <td>{{ stock.note || '-' }}</td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="4">
-              <strong>Total ajouté :</strong> +{{ getTotalAdded() }} sachets
-            </td>
-          </tr>
-        </tfoot>
-      </table>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h3 class="card-title h5 mb-4">Historique des rapprovisionnements</h3>
+      
+      <div *ngIf="stockHistory.length === 0" class="alert alert-info mb-0">
+        Aucun rapprovisionnement enregistr.
+      </div>
+      
+      <div class="table-responsive" *ngIf="stockHistory.length > 0">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Date</th>
+              <th>Quantit ajoute</th>
+              <th>Utilisateur</th>
+              <th>Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let stock of stockHistory">
+              <td>{{ formatDate(stock.added_at) }}</td>
+              <td class="text-success">+{{ stock.sachets_added }} sachets</td>
+              <td>{{ getUserName(stock.user_id) }}</td>
+              <td>{{ stock.note || '-' }}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4" class="table-active">
+                <strong>Total ajout :</strong> +{{ getTotalAdded() }} sachets
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
     </div>
   </div>
 </div>
